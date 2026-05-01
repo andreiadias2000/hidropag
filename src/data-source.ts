@@ -1,5 +1,4 @@
 import { DataSource } from "typeorm";
-import { Filiais } from "./filiais/entities/filiais.entity";
 import * as dotenv from 'dotenv';
 
 dotenv.config();
@@ -13,7 +12,7 @@ export const AppDataSource = new DataSource({
   database: 'postgres',
   synchronize: true,
   logging: true,
-  entities: [Filiais],
+  entities: [__dirname + '/**/*.entity{.ts,.js}'],
   ssl: {
     rejectUnauthorized: false,
   },
