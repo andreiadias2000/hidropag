@@ -1,3 +1,4 @@
+// usuario.entity.ts
 import { Column, Entity, PrimaryGeneratedColumn,OneToMany, ManyToOne, } from "typeorm";
 import { Filiais } from "../../filiais/entities/filiais.entity";
 import { APROVACOES } from "../../aprovaçoes/entities/aprovaçoe.entity";

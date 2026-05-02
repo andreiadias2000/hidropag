@@ -1,1 +1,7 @@
 senacrshidropag
+# Adiciona todas as modificações
+git add .
+#Sincronizar com a versão da colega
+git pull upstream main
+#Enviar para o repositório dela
+git push upstream main

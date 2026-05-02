@@ -17,14 +17,15 @@
 // src/app.module.ts
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AppDataSource } from './data-source'; // Importa a config que criamos
+import { AppDataSource } from './data-source'; 
 import { FiliaisModule } from './filiais/filiais.module';
+import { UsuariosModule } from './usuarios/usuarios.module'; // IMPORTAÇÃO CORRETA
 
 @Module({
   imports: [
-    // Usamos o initialize() do TypeOrmModule passando as opções do nosso Data Source
     TypeOrmModule.forRoot(AppDataSource.options),
     FiliaisModule,
+    UsuariosModule, // <--- AQUI DEVE SER O MODULE, NÃO A ENTIDADE
   ],
 })
 export class AppModule {}
