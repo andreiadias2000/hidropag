@@ -1,4 +1,6 @@
-import { Column, Entity, PrimaryGeneratedColumn, } from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn,ManyToOne,OneToMany } from "typeorm";
+import { APROVACOES } from "../../aprovaçoes/entities/aprovaçoe.entity";
+import { Obras } from "../../obras-empreendimentos/entities/obras-empreendimento.entity";
 
 @Entity('NOTAS')
 export class Notas {
@@ -23,13 +25,15 @@ export class Notas {
     @Column()
     status?: number;
 
-    @Column({type: 'bytea',
-        nullable: true,
-    })
-    arquivoPdf?:Buffer;
+    @Column({ type: 'bytea', nullable: true })
+    arquivoPdf?: Buffer; //[cite: 3]
     
+    // Relacionamento: Muitas notas pertencem a uma única Obra
+    @ManyToOne(() => Obras, (obra) => obra.notas)
+    obra?: Obras;
 
-
-
+    // Relacionamento: Uma nota pode passar por várias aprovações/histórico
+    @OneToMany(() => APROVACOES, (aprovacao) => aprovacao.nota)
+    aprovacoes?: APROVACOES[];
 
 }

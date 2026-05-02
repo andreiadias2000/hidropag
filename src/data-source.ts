@@ -10,7 +10,8 @@ export const AppDataSource = new DataSource({
   username: 'postgres.epkespwvvpmgknzwnlkp', // Use o formato usuario.id-do-projeto
   password: process.env.DB_PASSWORD,
   database: 'postgres',
-  synchronize: true,
+  synchronize: true, // Cria as tabelas automaticamente
+  //dropSchema: true,  // ATENÇÃO: Isso apaga TODAS as tabelas toda vez que o servidor reinicia
   logging: true,
   entities: [__dirname + '/**/*.entity{.ts,.js}'],
   ssl: {

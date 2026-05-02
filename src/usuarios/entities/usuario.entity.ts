@@ -1,4 +1,6 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn,OneToMany, ManyToOne, } from "typeorm";
+import { Filiais } from "../../filiais/entities/filiais.entity";
+import { APROVACOES } from "../../aprovaçoes/entities/aprovaçoe.entity";
 
 @Entity()
 export class Usuarios{
@@ -17,8 +19,13 @@ export class Usuarios{
     @Column()
     perfil?: string
 
-    @Column()
-    filial?: string
+    // Relacionamento: Muitos usuários trabalham em uma Filial
+    @ManyToOne(() => Filiais, (filial) => filial.usuarios)
+    filial?: Filiais;
+
+    // Relacionamento: Um usuário pode realizar várias aprovações
+    @OneToMany(() => APROVACOES, (aprovacao) => aprovacao.usuario)
+    aprovacoes?: APROVACOES[];
 
 
 }
