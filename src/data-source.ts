@@ -5,9 +5,12 @@ dotenv.config();
 
 export const AppDataSource = new DataSource({
   type: 'postgres',
-  host: 'aws-1-us-east-1.pooler.supabase.com', // Confira se o seu termina em .com
+  //host: 'aws-1-us-east-1.pooler.supabase.com', // Confira se o seu termina em .com
+  host: process.env.host,
+
   port: 6543,
-  username: 'postgres.epkespwvvpmgknzwnlkp', // Use o formato usuario.id-do-projeto
+  //username: 'postgres.epkespwvvpmgknzwnlkp', // Use o formato usuario.id-do-projeto
+  username: process.env.USER_NAME,
   password: process.env.DB_PASSWORD,
   database: 'postgres',
   synchronize: true, // Cria as tabelas automaticamente

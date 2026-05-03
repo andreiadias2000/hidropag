@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UsuariosController } from './usuarios.controller';
 import { UsuariosService } from './usuarios.service';
+import { beforeEach, describe } from 'node:test';
 
 describe('UsuariosController', () => {
   let controller: UsuariosController;
@@ -15,6 +16,6 @@ describe('UsuariosController', () => {
   });
 
   it('should be defined', () => {
-    expect(controller).toBeDefined();
+    expectCookies(controller).toBeDefined();
   });
 });
