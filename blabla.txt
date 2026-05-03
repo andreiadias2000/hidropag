@@ -1,7 +1,13 @@
 senacrshidropag
 # Adiciona todas as modificações
 git add .
+# git commit -m " eewfsff "
 #Sincronizar com a versão da colega
 git pull upstream main
 #Enviar para o repositório dela
 git push upstream main
+
+
+
+git checkout main
+git pull upstream main
