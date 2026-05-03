@@ -1,34 +1,33 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { ObrasEmpreendimentosService } from './obras-empreendimentos.service';
-import { CreateObrasEmpreendimentoDto } from './dto/create-obras-empreendimento.dto';
-import { UpdateObrasEmpreendimentoDto } from './dto/update-obras-empreendimento.dto';
+import { Obras } from './entities/obras-empreendimento.entity';
 
-@Controller('obras-empreendimentos')
+@Controller('OBRAS') // Mudei para 'obras' para facilitar o teste
 export class ObrasEmpreendimentosController {
-  constructor(private readonly obrasEmpreendimentosService: ObrasEmpreendimentosService) {}
+  constructor(private readonly service: ObrasEmpreendimentosService) {}
 
   @Post()
-  create(@Body() createObrasEmpreendimentoDto: CreateObrasEmpreendimentoDto) {
-    return this.obrasEmpreendimentosService.create(createObrasEmpreendimentoDto);
+  async criar(@Body() dados: Obras) {
+    return await this.service.inserir(dados);
   }
 
   @Get()
-  findAll() {
-    return this.obrasEmpreendimentosService.findAll();
+  async buscarTodas() {
+    return await this.service.listar();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.obrasEmpreendimentosService.findOne(+id);
+  async buscarUma(@Param('id') id: string) {
+    return await this.service.buscarPorId(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateObrasEmpreendimentoDto: UpdateObrasEmpreendimentoDto) {
-    return this.obrasEmpreendimentosService.update(+id, updateObrasEmpreendimentoDto);
+  async atualizar(@Param('id') id: string, @Body() dados: Partial<Obras>) {
+    return await this.service.alterar(id, dados);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.obrasEmpreendimentosService.remove(+id);
+  async remover(@Param('id') id: string) {
+    return await this.service.excluir(id);
   }
 }

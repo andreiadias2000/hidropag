@@ -1,34 +1,28 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete } from '@nestjs/common';
 import { AprovaçoesService } from './aprovaçoes.service';
-import { CreateAprovaçoeDto } from './dto/create-aprovaçoe.dto';
-import { UpdateAprovaçoeDto } from './dto/update-aprovaçoe.dto';
+import { APROVACOES } from './entities/aprovaçoe.entity';
 
-@Controller('aprovaçoes')
+@Controller('APROVACOES') // Rota: http://localhost:3000/APROVACOES
 export class AprovaçoesController {
   constructor(private readonly aprovaçoesService: AprovaçoesService) {}
 
   @Post()
-  create(@Body() createAprovaçoeDto: CreateAprovaçoeDto) {
-    return this.aprovaçoesService.create(createAprovaçoeDto);
+  async criar(@Body() dados: APROVACOES) {
+    return await this.aprovaçoesService.inserir(dados);
   }
 
   @Get()
-  findAll() {
-    return this.aprovaçoesService.findAll();
+  async buscarTodas() {
+    return await this.aprovaçoesService.listar();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.aprovaçoesService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateAprovaçoeDto: UpdateAprovaçoeDto) {
-    return this.aprovaçoesService.update(+id, updateAprovaçoeDto);
+  async buscarUma(@Param('id') id: string) {
+    return await this.aprovaçoesService.buscarPorId(id);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.aprovaçoesService.remove(+id);
+  async remover(@Param('id') id: string) {
+    return await this.aprovaçoesService.excluir(id);
   }
 }

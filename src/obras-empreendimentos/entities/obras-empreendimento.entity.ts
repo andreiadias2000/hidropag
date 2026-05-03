@@ -1,27 +1,19 @@
-import { Column, Entity, PrimaryGeneratedColumn,ManyToMany,OneToMany } from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn,OneToMany, ManyToOne } from "typeorm";
 import { Filiais } from "../../filiais/entities/filiais.entity";
 import { Notas } from "../../notas-fiscais/entities/notas-fiscais.entity";
 
-@Entity ('OBRAS')
-export class Obras{
-
+@Entity('OBRAS')
+export class Obras {
     @PrimaryGeneratedColumn('uuid')
-    id?: number;
+    id?: string; // Ajuste para string
 
     @Column()
     nome_obra?: string;
 
-    @Column()
-    filiais?: string;
-
-    // Relacionamento: Muitas obras pertencem a uma única Filial
-    @ManyToMany(() => Filiais, (filial) => filial.obras)
+    // Relacionamento corrigido: ManyToOne aponta para filial.obras
+    @ManyToOne(() => Filiais, (filial) => filial.obras) // Muitos para Um[cite: 9, 13]
     filial?: Filiais;
 
-    // Relacionamento: Uma obra pode ter várias notas fiscais vinculadas
     @OneToMany(() => Notas, (nota) => nota.obra)
     notas?: Notas[];
-
-    
-    
 }

@@ -1,26 +1,53 @@
-import { Injectable } from '@nestjs/common';
-import { CreateNotasFiscaiDto } from './dto/create-notas-fiscai.dto';
-import { UpdateNotasFiscaiDto } from './dto/update-notas-fiscai.dto';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Notas } from './entities/notas-fiscais.entity';
 
 @Injectable()
 export class NotasFiscaisService {
-  create(createNotasFiscaiDto: CreateNotasFiscaiDto) {
-    return 'This action adds a new notasFiscai';
+  constructor(
+    @InjectRepository(Notas)
+    private readonly repository: Repository<Notas>,
+  ) {}
+
+  // Criar uma nota
+  async inserir(nota: Notas): Promise<Notas> {
+    return await this.repository.save(nota);
   }
 
-  findAll() {
-    return `This action returns all notasFiscais`;
+  // Listar todas com a Obra vinculada
+  async listar(): Promise<Notas[]> {
+    return await this.repository.find({
+      relations: ['obra'], // Traz os dados da obra vinculada
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} notasFiscai`;
+  // Buscar por ID
+  async buscarPorId(id: string): Promise<Notas> {
+    const nota = await this.repository.findOne({
+      where: { id: id as any }, // Ajuste caso seu ID seja UUID
+      relations: ['obra', 'aprovacoes'],
+    });
+
+    if (!nota) {
+      throw new NotFoundException(`Nota Fiscal com ID ${id} não encontrada`);
+    }
+    return nota;
   }
 
-  update(id: number, updateNotasFiscaiDto: UpdateNotasFiscaiDto) {
-    return `This action updates a #${id} notasFiscai`;
+  // Atualizar (Patch/Put)
+  async alterar(id: string, dados: Partial<Notas>): Promise<void> {
+    const notaExiste = await this.buscarPorId(id);
+    if (notaExiste) {
+      await this.repository.update(id, dados);
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} notasFiscai`;
+  // Excluir
+  async excluir(id: string): Promise<void> {
+    const notaExiste = await this.buscarPorId(id);
+    if (notaExiste) {
+      await this.repository.delete(id);
+    }
   }
 }

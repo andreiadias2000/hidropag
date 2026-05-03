@@ -1,26 +1,48 @@
-import { Injectable } from '@nestjs/common';
-import { CreateObrasEmpreendimentoDto } from './dto/create-obras-empreendimento.dto';
-import { UpdateObrasEmpreendimentoDto } from './dto/update-obras-empreendimento.dto';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Obras } from './entities/obras-empreendimento.entity';
 
 @Injectable()
 export class ObrasEmpreendimentosService {
-  create(createObrasEmpreendimentoDto: CreateObrasEmpreendimentoDto) {
-    return 'This action adds a new obrasEmpreendimento';
+  constructor(
+    @InjectRepository(Obras)
+    private readonly repository: Repository<Obras>,
+  ) {}
+
+  async inserir(dados: Obras): Promise<Obras> {
+    return await this.repository.save(dados);
   }
 
-  findAll() {
-    return `This action returns all obrasEmpreendimentos`;
+  async listar(): Promise<Obras[]> {
+    return await this.repository.find({
+      relations: ['filial', 'notas'], // Traz a filial e as notas da obra[cite: 13]
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} obrasEmpreendimento`;
+  async buscarPorId(id: string): Promise<Obras> {
+    const obra = await this.repository.findOne({
+      where: { id: id as any },
+      relations: ['filial', 'notas'],
+    });
+
+    if (!obra) {
+      throw new NotFoundException(`Obra com ID ${id} não encontrada`);
+    }
+    return obra;
   }
 
-  update(id: number, updateObrasEmpreendimentoDto: UpdateObrasEmpreendimentoDto) {
-    return `This action updates a #${id} obrasEmpreendimento`;
+  async alterar(id: string, dados: Partial<Obras>): Promise<void> {
+    const existe = await this.buscarPorId(id);
+    if (existe) {
+      await this.repository.update(id, dados);
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} obrasEmpreendimento`;
+  async excluir(id: string): Promise<void> {
+    const existe = await this.buscarPorId(id);
+    if (existe) {
+      await this.repository.delete(id);
+    }
   }
 }

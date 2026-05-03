@@ -3,24 +3,21 @@ import { Obras } from "../../obras-empreendimentos/entities/obras-empreendimento
 import { Usuarios } from "../../usuarios/entities/usuario.entity";
 
 @Entity('FILIAIS')
-export class Filiais{
+export class Filiais {
     @PrimaryGeneratedColumn('uuid')
-    id?: number; 
+    id?: string;
 
     @Column()
-    nome?: string
+    nome?: string;
 
     @Column()
-    cidade?: string
+    cidade?: string;
 
-    // Relacionamento: Uma filial pode ter muitas obras
-    @OneToMany(() => Obras, (obra) => obra.filiais)
+    // CORREÇÃO: O campo em Obras chama-se 'filial' (singular)
+    @OneToMany(() => Obras, (obra) => obra.filial) // Ajustado para bater com a classe Obras[cite: 9, 13]
     obras?: Obras[];
 
-    // Relacionamento: Uma filial pode ter muitos usuários
     @OneToMany(() => Usuarios, (usuario) => usuario.filial)
     usuarios?: Usuarios[];
-
 }
-
 
