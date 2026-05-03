@@ -18,14 +18,25 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppDataSource } from './data-source'; 
+
+// Importação dos Módulos
 import { FiliaisModule } from './filiais/filiais.module';
-import { UsuariosModule } from './usuarios/usuarios.module'; // IMPORTAÇÃO CORRETA
+import { UsuariosModule } from './usuarios/usuarios.module'; 
+import { AprovaçoesModule } from './aprovaçoes/aprovaçoes.module';
+import { NotasFiscaisModule } from './notas-fiscais/notas-fiscais.module';
+import { ObrasEmpreendimentosModule } from './obras-empreendimentos/obras-empreendimentos.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot(AppDataSource.options),
+    // Puxando as configurações do data-source
+    TypeOrmModule.forRoot(AppDataSource.options), 
+    
+    // Lista de todos os módulos ativos no sistema
     FiliaisModule,
-    UsuariosModule, // <--- AQUI DEVE SER O MODULE, NÃO A ENTIDADE
+    UsuariosModule, 
+    AprovaçoesModule,
+    NotasFiscaisModule,
+    ObrasEmpreendimentosModule,
   ],
 })
 export class AppModule {}

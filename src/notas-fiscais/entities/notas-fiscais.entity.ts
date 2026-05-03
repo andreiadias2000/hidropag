@@ -7,7 +7,7 @@ import { Obras } from "../../obras-empreendimentos/entities/obras-empreendimento
 @Entity('NOTAS')
 export class Notas {
     @PrimaryGeneratedColumn('uuid')
-    id?: number;
+    id?: string;
 
     @Column()
     numero_nf?: number;
@@ -39,3 +39,4 @@ export class Notas {
     aprovacoes?: APROVACOES[];
 
 }
+
