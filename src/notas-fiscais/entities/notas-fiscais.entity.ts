@@ -1,3 +1,5 @@
+//notas-fiscais,entity.ts
+
 import { Column, Entity, PrimaryGeneratedColumn,ManyToOne,OneToMany } from "typeorm";
 import { APROVACOES } from "../../aprovaçoes/entities/aprovaçoe.entity";
 import { Obras } from "../../obras-empreendimentos/entities/obras-empreendimento.entity";
@@ -5,7 +7,7 @@ import { Obras } from "../../obras-empreendimentos/entities/obras-empreendimento
 @Entity('NOTAS')
 export class Notas {
     @PrimaryGeneratedColumn('uuid')
-    id?: number;
+    id?: string;
 
     @Column()
     numero_nf?: number;
@@ -37,3 +39,4 @@ export class Notas {
     aprovacoes?: APROVACOES[];
 
 }
+

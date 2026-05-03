@@ -1,3 +1,5 @@
+//usuario.controller.ts
+
 import { Controller, Get, Post, Body, Put, Delete, Param } from '@nestjs/common';
 import { UsuariosService } from './usuarios.service';
 import { Usuarios } from './entities/usuario.entity';
