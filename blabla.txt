@@ -12,3 +12,10 @@ git push upstream main
 git checkout main
 git pull upstream main
 branch ivan
+
+
+comando para instalar todas as dependencias 
+
+npm install @nestjs/typeorm typeorm pg @nestjs/jwt @nestjs/passport passport passport-jwt bcrypt @nestjs/config jsonwebtoken multer dotenv reflect-metadata && npm install -D @types/multer @types/jsonwebtoken @types/passport-jwt @types/bcrypt
+
+npm install --save @nestjs/swagger

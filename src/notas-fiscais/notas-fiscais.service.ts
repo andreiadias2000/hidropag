@@ -12,9 +12,13 @@ export class NotasFiscaisService {
   ) {}
 
   // Criar uma nota
-  async inserir(nota: Notas): Promise<Notas> {
-    return await this.repository.save(nota);
-  }
+  // async inserir(nota: Notas): Promise<Notas> {
+  //   return await this.repository.save(nota);
+  // }
+  async inserir(dados: Notas) {
+  const novaNota = this.repository.create(dados); // O create garante que o buffer seja mantido
+  return await this.repository.save(dados);
+}
 
   // Listar todas com a Obra vinculada
   async listar(): Promise<Notas[]> {

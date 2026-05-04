@@ -2,7 +2,7 @@ import { timeStamp } from "node:console";
 import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Notas } from "../../notas-fiscais/entities/notas-fiscais.entity";
 import { Usuarios } from "../../usuarios/entities/usuario.entity";
-
+import { ApiProperty } from '@nestjs/swagger';
 @Entity('APROVACOES')
 
 export class APROVACOES{
