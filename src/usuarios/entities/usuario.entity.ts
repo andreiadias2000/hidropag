@@ -14,8 +14,8 @@ export class Usuarios{
     @Column()
     email?: string;
 
-    @Column()
-    senha?: number
+    @Column({ nullable: true }) // aqui para aceitar nullo por enquanto para os testes
+    senha?: string;
     
     @Column()
     perfil?: string

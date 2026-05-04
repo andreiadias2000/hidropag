@@ -16,7 +16,7 @@ export class Notas {
     @Column({type: 'date'})
     data_vencimento?: string;
 
-    @Column()
+    @Column({ type: 'decimal', precision: 10, scale: 2, nullable: true })
     valor_total?: number;
 
     @Column()

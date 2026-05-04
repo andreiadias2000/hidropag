@@ -1,15 +1,25 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFile } from '@nestjs/common';
 import { NotasFiscaisService } from './notas-fiscais.service';
 import { Notas } from './entities/notas-fiscais.entity';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('NOTAS')
 export class NotasFiscaisController {
   constructor(private readonly notasFiscaisService: NotasFiscaisService) {}
 
   @Post()
-  async criar(@Body() nota: Notas) {
+  @UseInterceptors(FileInterceptor('file')) // 'file' é o nome do campo no Thunder Client
+  async criar(@Body() nota: Notas, @UploadedFile() file: Express.Multer.File) {
+    if (file) {
+      nota.arquivoPdf = file.buffer; // Salva o conteúdo binário do PDF
+    }
     return await this.notasFiscaisService.inserir(nota);
   }
+
+  // @Post()
+  // async criar(@Body() nota: Notas) {
+  //   return await this.notasFiscaisService.inserir(nota);
+  // }
 
   @Get()
   async buscarTodas() {
