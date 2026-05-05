@@ -4,6 +4,8 @@ import { Filiais } from "../../filiais/entities/filiais.entity";
 import { APROVACOES } from "../../aprovaçoes/entities/aprovaçoe.entity";
 import { ApiProperty } from '@nestjs/swagger';
 
+
+
 @Entity()
 export class Usuarios{
     @PrimaryGeneratedColumn()

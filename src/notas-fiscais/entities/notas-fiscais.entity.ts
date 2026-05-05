@@ -1,3 +1,5 @@
+//notas-fiscais.entity.ts
+
 import { Column, Entity, PrimaryGeneratedColumn,ManyToOne,OneToMany } from "typeorm";
 import { APROVACOES } from "../../aprovaçoes/entities/aprovaçoe.entity";
 import { Obras } from "../../obras-empreendimentos/entities/obras-empreendimento.entity";
@@ -45,5 +47,7 @@ export class Notas {
     @ApiHideProperty()
     @OneToMany(() => APROVACOES, (aprovacao) => aprovacao.nota)
     aprovacoes?: APROVACOES[];
+
+  
 
 }
