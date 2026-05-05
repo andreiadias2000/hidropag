@@ -1,4 +1,9 @@
+<<<<<<< HEAD
 //aprovaçoes.entity.ts
+=======
+
+// src/aprovaçoes/entities/aprovaçoe.entity.ts
+>>>>>>> main
 
 import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Notas } from "../../notas-fiscais/entities/notas-fiscais.entity";
@@ -8,6 +13,7 @@ import { ApiHideProperty, ApiProperty } from '@nestjs/swagger';
 @Entity('APROVACOES')
 export class APROVACOES {
 
+<<<<<<< HEAD
     @PrimaryGeneratedColumn('uuid')
     @ApiProperty({ example: '123e4567-e89b-12d3-a456-426614174000', description: 'ID gerado automaticamente' })
     id?: string; // Ajustado de number para string por causa do UUID
@@ -25,6 +31,18 @@ export class APROVACOES {
     @ApiProperty({ example: '2026-05-04T21:28:27.000Z', description: 'Data e hora da aprovação' })
     data_aprovacao?: Date;
 
+=======
+    @PrimaryGeneratedColumn()
+    id?: number;
+
+    // A decisão agora é número: Ex: 1 = Aprovado, 2 = Reprovado
+    @Column({ nullable: true })
+    decisao?: number;
+
+    @Column({ nullable: true })
+    observacao?: string;
+
+>>>>>>> main
     // Relacionamento: Muitas aprovações podem referenciar a mesma Nota
     @ApiHideProperty() // Escondemos para o Swagger ficar limpo
     @ManyToOne(() => Notas, (nota) => nota.aprovacoes)
@@ -34,13 +52,31 @@ export class APROVACOES {
     @ApiHideProperty() // Escondemos para o Swagger ficar limpo
     @ManyToOne(() => Usuarios, (usuario) => usuario.aprovacoes)
     usuario?: Usuarios;
+<<<<<<< HEAD
 }
 
+=======
+
+    @CreateDateColumn({ type: 'timestamp' })
+    decidido_em?: Date;
+}
+
+//
+
+
+
+// //aprovaçoes.entity.ts
+
+>>>>>>> main
 // import { timeStamp } from "node:console";
 // import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 // import { Notas } from "../../notas-fiscais/entities/notas-fiscais.entity";
 // import { Usuarios } from "../../usuarios/entities/usuario.entity";
+<<<<<<< HEAD
 // import { ApiProperty } from '@nestjs/swagger';
+=======
+
+>>>>>>> main
 // @Entity('APROVACOES')
 
 // export class APROVACOES{
@@ -69,3 +105,7 @@ export class APROVACOES {
 
 
 // }
+<<<<<<< HEAD
+=======
+
+>>>>>>> main

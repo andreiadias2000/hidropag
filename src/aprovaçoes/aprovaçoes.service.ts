@@ -1,47 +1,26 @@
-//aprovaçoes.service.ts
-
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { APROVACOES } from './entities/aprovaçoe.entity';
+import { Injectable } from '@nestjs/common';
+import { CreateAprovaçoeDto } from './dto/create-aprovaçoe.dto';
+import { UpdateAprovaçoeDto } from './dto/update-aprovaçoe.dto';
 
 @Injectable()
 export class AprovaçoesService {
-  constructor(
-    @InjectRepository(APROVACOES)
-    private readonly repository: Repository<APROVACOES>,
-  ) {}
-
-  // Salva uma nova decisão (Aprovar/Reprovar)
-  async inserir(dados: APROVACOES): Promise<APROVACOES> {
-    return await this.repository.save(dados);
+  create(createAprovaçoeDto: CreateAprovaçoeDto) {
+    return 'This action adds a new aprovaçoe';
   }
 
-  // Lista o histórico completo de todas as notas
-  async listar(): Promise<APROVACOES[]> {
-    return await this.repository.find({
-      relations: ['usuario', 'nota'], // Mostra quem aprovou e qual nota foi
-    });
+  findAll() {
+    return `This action returns all aprovaçoes`;
   }
 
-  // Busca uma aprovação específica
-  async buscarPorId(id: string): Promise<APROVACOES> {
-    const registro = await this.repository.findOne({
-      where: { id: id as any },
-      relations: ['usuario', 'nota'],
-    });
-
-    if (!registro) {
-      throw new NotFoundException(`Registro de aprovação ${id} não encontrado`);
-    }
-    return registro;
+  findOne(id: number) {
+    return `This action returns a #${id} aprovaçoe`;
   }
 
-  // Excluir (caso precise cancelar um registro)
-  async excluir(id: string): Promise<void> {
-    const existe = await this.buscarPorId(id);
-    if (existe) {
-      await this.repository.delete(id);
-    }
+  update(id: number, updateAprovaçoeDto: UpdateAprovaçoeDto) {
+    return `This action updates a #${id} aprovaçoe`;
+  }
+
+  remove(id: number) {
+    return `This action removes a #${id} aprovaçoe`;
   }
 }

@@ -1,5 +1,11 @@
+<<<<<<< HEAD
 // src/usuarios/usuarios.controller.ts
 import { Controller, Get, Post, Delete, Body, Put, Param, Res, HttpStatus } from '@nestjs/common';
+=======
+//usuario.controller.ts
+
+import { Controller, Get, Post, Body, Put, Delete, Param } from '@nestjs/common';
+>>>>>>> main
 import { UsuariosService } from './usuarios.service';
 import { Usuarios } from './entities/usuario.entity';
 import { LoginService } from './login.service'; // 1. Importe o novo service

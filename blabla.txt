@@ -11,6 +11,7 @@ git push upstream main
 
 git checkout main
 git pull upstream main
+<<<<<<< HEAD
 branch ivan
 
 
@@ -20,3 +21,35 @@ npm install @nestjs/typeorm typeorm pg @nestjs/jwt @nestjs/passport passport pas
 
 npm install --save @nestjs/swagger
 
+=======
+
+====================================================================
+GUIA DE SALVAMENTO: COMO RESOLVER CONFLITOS NO GIT (MERGE CONFLICT)
+====================================================================
+
+Quando acontece?
+Quando eu e o ivan alteramos as mesmas linhas do mesmo arquivo e tentamos juntar tudo na branch principal (main). O terminal dá o erro: "CONFLICT (content): Merge conflict... Automatic merge failed".
+
+COMO RESOLVER NO VS CODE:
+
+Passo 1: Identificar os arquivos
+Olhar na barra lateral do VS Code. Os arquivos em conflito estarão marcados com a letra "C". Clicar neles para abrir.
+
+Passo 2: Escolher qual código manter
+O VS Code vai mostrar os códigos conflitantes com opções coloridas acima deles. Clicar em uma das opções:
+- Accept Current Change (Mantém o MEU código)
+- Accept Incoming Change (Mantém o código do COLEGA)
+- Accept Both Changes (Mantém os DOIS códigos - ideal para arquivos como data-source.ts, onde depois é só limpar as linhas repetidas manualmente).
+
+Passo 3: Salvar
+Dar Ctrl + S em todos os arquivos que foram arrumados.
+
+Passo 4: Finalizar no Terminal
+Rodar os comandos abaixo, um por vez, para avisar o Git que a paz foi restaurada e mandar para a nuvem:
+
+git add .
+git commit -m "fix: resolvendo conflitos de merge"
+git push origin main
+
+======
+>>>>>>> main

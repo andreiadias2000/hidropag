@@ -1,5 +1,8 @@
 //filiais.entity.ts
+<<<<<<< HEAD
 
+=======
+>>>>>>> main
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Obras } from "../../obras-empreendimentos/entities/obras-empreendimento.entity";
 import { Usuarios } from "../../usuarios/entities/usuario.entity";
@@ -27,4 +30,7 @@ export class Filiais {
     @OneToMany(() => Usuarios, (usuario) => usuario.filial)
     usuarios?: Usuarios[];
 }
+<<<<<<< HEAD
 
+=======
+>>>>>>> main
