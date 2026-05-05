@@ -11,6 +11,9 @@ import { Obras } from './entities/obras-empreendimento.entity';
   controllers: [ObrasEmpreendimentosController],
   providers: [ObrasEmpreendimentosService],
 })
+<<<<<<< HEAD
+export class ObrasEmpreendimentosModule {}
+=======
 export class ObrasEmpreendimentosModule {}
 
 
@@ -24,3 +27,4 @@ export class ObrasEmpreendimentosModule {}
 //   providers: [ObrasEmpreendimentosService],
 // })
 // export class ObrasEmpreendimentosModule {}
+>>>>>>> main

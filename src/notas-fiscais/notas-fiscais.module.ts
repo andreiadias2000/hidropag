@@ -17,10 +17,14 @@ import { NotasFiscaisController } from './notas-fiscais.controller';
 import { Notas } from './entities/notas-fiscais.entity';
 
 @Module({
+<<<<<<< HEAD
+  imports: [TypeOrmModule.forFeature([Notas])], // Registro essencial
+=======
   imports: [
     // Essa é a linha mágica que resolve o erro! 
     TypeOrmModule.forFeature([Notas])
   ],
+>>>>>>> main
   controllers: [NotasFiscaisController],
   providers: [NotasFiscaisService],
 })

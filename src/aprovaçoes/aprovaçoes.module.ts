@@ -16,6 +16,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AprovaçoesService } from './aprovaçoes.service';
 import { AprovaçoesController } from './aprovaçoes.controller';
 import { APROVACOES } from './entities/aprovaçoe.entity';
+<<<<<<< HEAD
+
+@Module({
+  imports: [TypeOrmModule.forFeature([APROVACOES])],
+=======
 import { Usuarios } from '../usuarios/entities/usuario.entity'; 
 
 @Module({
@@ -23,6 +28,7 @@ import { Usuarios } from '../usuarios/entities/usuario.entity';
     // Essa é a linha que resolve o erro! Ela avisa o NestJS para liberar as tabelas.
     TypeOrmModule.forFeature([APROVACOES, Usuarios])
   ],
+>>>>>>> main
   controllers: [AprovaçoesController],
   providers: [AprovaçoesService],
 })

@@ -1,14 +1,41 @@
+<<<<<<< HEAD
+import { Controller, Get, Post, Body, Param, Delete } from '@nestjs/common';
+import { AprovaçoesService } from './aprovaçoes.service';
+import { APROVACOES } from './entities/aprovaçoe.entity';
+=======
 // src/aprovaçoes/aprovaçoes.controller.ts
 
 import { Controller, Get, Post, Body, Put, Delete, Param } from '@nestjs/common';
 import { AprovaçoesService } from './aprovaçoes.service';
+>>>>>>> main
 
-@Controller('aprovaçoes')
+@Controller('APROVACOES') // Rota: http://localhost:3000/APROVACOES
 export class AprovaçoesController {
   
   constructor(private readonly aprovaçoesService: AprovaçoesService) {}
 
   @Post()
+<<<<<<< HEAD
+  async criar(@Body() dados: APROVACOES) {
+    return await this.aprovaçoesService.inserir(dados);
+  }
+
+  @Get()
+  async buscarTodas() {
+    return await this.aprovaçoesService.listar();
+  }
+
+  @Get(':id')
+  async buscarUma(@Param('id') id: string) {
+    return await this.aprovaçoesService.buscarPorId(id);
+  }
+
+  @Delete(':id')
+  async remover(@Param('id') id: string) {
+    return await this.aprovaçoesService.excluir(id);
+  }
+}
+=======
   async criar(@Body() dados: any) { 
     return await this.aprovaçoesService.create(dados);
   }
@@ -72,3 +99,4 @@ export class AprovaçoesController {
 // }
 
 
+>>>>>>> main

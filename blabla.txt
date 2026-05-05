@@ -11,6 +11,17 @@ git push upstream main
 
 git checkout main
 git pull upstream main
+<<<<<<< HEAD
+branch ivan
+
+
+comando para instalar todas as dependencias 
+
+npm install @nestjs/typeorm typeorm pg @nestjs/jwt @nestjs/passport passport passport-jwt bcrypt @nestjs/config jsonwebtoken multer dotenv reflect-metadata && npm install -D @types/multer @types/jsonwebtoken @types/passport-jwt @types/bcrypt
+
+npm install --save @nestjs/swagger
+
+=======
 
 ====================================================================
 GUIA DE SALVAMENTO: COMO RESOLVER CONFLITOS NO GIT (MERGE CONFLICT)
@@ -41,3 +52,4 @@ git commit -m "fix: resolvendo conflitos de merge"
 git push origin main
 
 ======
+>>>>>>> main
