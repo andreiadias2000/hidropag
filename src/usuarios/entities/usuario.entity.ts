@@ -13,12 +13,12 @@ export class Usuarios{
     @ApiProperty({ example: 'Ivan Silva', description: 'Nome completo do usuário' })
     nome?: string 
 
-    @Column()
+    @Column({ unique: true })// emial vai ser unico 
     @ApiProperty({ example: 'ivan@teste.com' })
     email?: string;
 
-    @Column({ nullable: true }) // aqui para aceitar nullo por enquanto para os testes
-    @ApiProperty({ example: '123WWFrty67'})
+    @Column({ name: 'senha', nullable: false })
+    @ApiProperty({ description: 'Senha do usuário' })
     senha?: string;
     
     @Column()
