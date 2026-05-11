@@ -2,6 +2,8 @@
 import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppDataSource } from './data-source'; 
+
+// Importação dos Módulos
 import { FiliaisModule } from './filiais/filiais.module';
 import { UsuariosModule } from './usuarios/usuarios.module'; 
 import { NotasFiscaisModule } from './notas-fiscais/notas-fiscais.module';
@@ -13,10 +15,7 @@ import { PerfisModule } from './perfil/entities/perfil.module'; // Verifique se 
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
-      ...AppDataSource.options,
-      autoLoadEntities: true, // Substitui o erro 'autoLoadEnti'
-    }),
+    TypeOrmModule.forRoot(AppDataSource.options),
     FiliaisModule,
     UsuariosModule,
     NotasFiscaisModule,

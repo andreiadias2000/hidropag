@@ -1,4 +1,3 @@
-// src/usuarios/usuarios.module.ts
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsuariosService } from './usuarios.service';
