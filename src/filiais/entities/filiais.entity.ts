@@ -1,5 +1,5 @@
 //filiais.entity.ts
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, DeleteDateColumn, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Obras } from "../../obras-empreendimentos/entities/obras-empreendimento.entity";
 import { Usuarios } from "../../usuarios/entities/usuario.entity";
 import { ApiProperty } from "@nestjs/swagger";
@@ -33,6 +33,9 @@ export class Filiais {
     @ApiProperty({ example: 'Av. Ipiranga', description: 'Rua/Avenida da filial' })
     logradouro?: string;
 
+    @DeleteDateColumn({ name: 'deleted_at', nullable: true })
+    @ApiProperty({ description: 'Data de desativação da filial (Soft Delete)', nullable: true })
+    deletedAt?: Date;
 
     @Column({ nullable: true, unique: true, length: 14 })
     @ApiProperty({ example: '12345678000199', description: 'CNPJ da filial (apenas números)' })

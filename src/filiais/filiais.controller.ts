@@ -38,13 +38,12 @@ export class FiliaisController {
       example: {
         nome: 'Hidropag - Filial Porto Alegre',
         cnpj: '12345678000199',
-        ativo: true,
         cidade: 'Porto Alegre',
         uf: 'RS',
         cep: '90000000',
         logradouro: 'Av. Ipiranga',
         numero: '1234',
-        email_contato: 'portoalegre@hidropag.com'
+        deletedAt: null
       }
     }
   })
@@ -54,14 +53,16 @@ export class FiliaisController {
   ) {
     return await this.filiaisService.alterar(id, updateFilialDto);
   }
-  async atualizar(
-    @Param('id') id: string, // CORRIGIDO: de number para string (UUID)
-    @Body() filial: any
-  ): Promise<void> {
-    await this.filiaisService.alterar(id, filial);
-  }
+
+  
 
   @Delete(':id')
+  @ApiOperation({ 
+    summary: 'Remover ou Desativar Filial',
+    description: 'Se a filial possuir obras ou usuários vinculados, ela será apenas desativada (soft-delete). Caso não possua nenhum vínculo, será excluída permanentemente do banco.' 
+  })
+  @ApiResponse({ status: 200, description: 'Filial excluída ou desativada com sucesso.' })
+  @ApiResponse({ status: 404, description: 'Filial não encontrada.' })
   async remover(@Param('id') id: string) {
     return await this.filiaisService.excluir(id);
   }

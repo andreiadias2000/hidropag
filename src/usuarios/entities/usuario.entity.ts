@@ -1,5 +1,5 @@
 // usuario.entity.ts
-import { Column, Entity, PrimaryGeneratedColumn,OneToMany, ManyToOne, } from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn,OneToMany, ManyToOne, DeleteDateColumn, } from "typeorm";
 import { Filiais } from "../../filiais/entities/filiais.entity";
 import { APROVACOES } from "../../aprovaçoes/entities/aprovaçoe.entity";
 import { ApiProperty } from '@nestjs/swagger';
@@ -18,6 +18,8 @@ export class Usuarios{
 
     @Column({ name: 'senha', nullable: false })    
     senha?: string;
+
+    
 
     // NOVO CAMPO DE CONTROLE
     @Column({ default: true })

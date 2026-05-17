@@ -1,8 +1,9 @@
 import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Not, Repository } from 'typeorm';
 import { Filiais } from './entities/filiais.entity';
 import { CreateFilialDto } from './dto/create-filiais.dto';
+import { UpdateFilialDto } from './dto/update-filiais.dto';
 
 @Injectable()
 export class FiliaisService {
@@ -45,16 +46,45 @@ export class FiliaisService {
     return filial;
   }
 
-  async alterar(id: string, dados: Partial<Filiais>): Promise<void> {
-    const existe = await this.buscarPorId(id);
-    if (existe) {
-      await this.repository.update(id, dados);
+  async alterar(id: string, dados: UpdateFilialDto): Promise<void> {
+    const filial = await this.repository.findOne({
+      where: { id: id as any }
+    });
+
+    if (!filial) {
+      throw new NotFoundException(`Filial com ID ${id} não encontrada.`);
     }
+
+    if (dados.nome) {
+      const nomeDuplicado = await this.repository.findOne({
+        where: { 
+          nome: dados.nome,
+          id: Not(id)
+        }
+      });
+
+      if (nomeDuplicado) {
+        throw new BadRequestException(`Já existe outra filial cadastrada com o nome "${dados.nome}".`);
+      }
+    }
+
+    await this.repository.update(id, dados);
   }
 
   async excluir(id: string): Promise<void> {
-    const existe = await this.buscarPorId(id);
-    if (existe) {
+    const filial = await this.buscarPorId(id);
+
+    const totalObras = await this.repository.manager.count('Obras', {
+      where: { filial: { id } }
+    });
+
+    const totalUsuarios = await this.repository.manager.count('Usuarios', {
+      where: { filial: { id } }
+    });
+
+    if (totalObras > 0 || totalUsuarios > 0) {
+      await this.repository.softDelete(id);
+    } else {
       await this.repository.delete(id);
     }
   }
