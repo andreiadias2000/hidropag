@@ -1,7 +1,7 @@
-import { Controller, Get, Post, Body, Param, Delete, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, UseGuards, Put } from '@nestjs/common';
 import { AprovaçoesService } from './aprovaçoes.service';
 import { APROVACOES } from './entities/aprovaçoe.entity';
-import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { RolesGuard } from '../common/guards/roles.guard';
 
 
@@ -45,7 +45,29 @@ export class AprovaçoesController {
   async buscarUma(@Param('id') id: string) {
     return await this.aprovaçoesService.buscarPorId(id);
   }
-
+  @Put(':id')
+  @ApiOperation({ summary: 'Atualizar/Dar parecer em uma aprovação (Requer Token)' })
+  @UseGuards(RolesGuard) // Garante que o perfil 'leitor' será bloqueado aqui
+  @ApiBody({
+    description: 'Campos para atualização da Aprovação (Altere o status ou adicione observações)',
+    schema: {
+      type: 'object',
+      example: {
+        status: 'Decisão: 1 para Aprovado, 2 para Reprovado', // Exemplos: 'Pendente', 'Aprovado', 'Rejeitado'
+        observacao: 'Nota fiscal conferida e liberada para pagamento.',
+        dataAnalise: '2026-05-17'
+      }
+    }
+  })
+  
+  async alterar(
+    @Param('id') id: string, // Ajuste para 'number' caso o ID desta tabela não seja UUID
+    @Body() dadosAprovacao: any
+  ): Promise<any> {
+    // Chama o método correspondente do seu service (pode ser 'alterar', 'atualizar' ou 'update')
+    return await this.aprovaçoesService.alterar(id, dadosAprovacao);
+  }
+  
   @Delete(':id')
   async remover(@Param('id') id: string) {
     return await this.aprovaçoesService.excluir(id);

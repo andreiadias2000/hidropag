@@ -34,7 +34,13 @@ export class AprovaçoesService {
     }
     return registro;
   }
-
+  
+  async alterar(id: string, dados: Partial<APROVACOES>): Promise<void> {
+      const existe = await this.buscarPorId(id);
+      if (existe) {
+        await this.repository.update(id, dados);
+      }
+    }
   // Excluir (caso precise cancelar um registro)
   async excluir(id: string): Promise<void> {
     const existe = await this.buscarPorId(id);

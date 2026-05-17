@@ -74,8 +74,22 @@ export class UsuariosController {
   @Put(':id')
   @ApiOperation({ summary: 'Atualizar usuário (Requer Token)' })
   @UseGuards(RolesGuard) // Seu guardião que bloqueia o leitor
-  async atualizar(@Param('id') id: number, @Body() usuario: UpdateUsuarioDto): Promise<void> {
-    await this.usuariosService.alterar(id, usuario as any);
+  @ApiBody({
+    description: 'Campos para atualização do usuário (Envie apenas o que deseja alterar)',
+    schema: {
+      type: 'object',
+      example: {
+        nome: 'Ivan Silva',
+        email: 'ivan@teste.com',
+        senha: 'Admin#2026',
+        perfil: {
+          id: '6fc13eec-a3fe-4fe4-811b-2563cb1b5f4c'
+        }
+      }
+    }
+  })
+  async atualizar(@Param('id') id: number, @Body() usuario: any): Promise<void> {
+    await this.usuariosService.alterar(id, usuario);
   }
 
   @Delete(':id')

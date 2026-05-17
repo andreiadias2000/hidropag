@@ -1,5 +1,5 @@
 import { Controller, Get, Post, Body, Param, Delete, Put, ParseUUIDPipe, UseGuards } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiBearerAuth, ApiBody } from '@nestjs/swagger';
 import { ObrasEmpreendimentosService } from './obras-empreendimentos.service';
 import { CreateObrasEmpreendimentoDto } from './dto/create-obras-empreendimento.dto';
 import { UpdateObrasEmpreendimentoDto } from './dto/update-obras-empreendimento.dto';
@@ -31,9 +31,23 @@ export class ObrasEmpreendimentosController {
   }
 
   @Put(':id')
+  @ApiOperation({ summary: 'Atualizar obra/empreendimento (Requer Token)' })
+  @UseGuards(RolesGuard) // Bloqueia o perfil 'leitor' de fazer alterações nas obras
+  @ApiBody({
+    description: 'Campos para atualização da Obra (Envie apenas o que deseja alterar)',
+    schema: {
+      type: 'object',
+      example: {
+        nome_obra: 'Hospital Moinhos de Vento',
+        filial: {
+          id: 'd3b07384-d113-4c4e-9c95-bd845d471018'
+        }
+      }
+    }
+  })
   async atualizar(
     @Param('id', ParseUUIDPipe) id: string, 
-    @Body() dados: UpdateObrasEmpreendimentoDto
+    @Body() dados: any 
   ) {
     return await this.service.alterar(id, dados);
   }

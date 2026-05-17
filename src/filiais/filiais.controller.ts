@@ -3,7 +3,7 @@ import { FiliaisService } from './filiais.service';
 
 import { CreateFilialDto } from './dto/create-filiais.dto'; 
 import { UpdateFilialDto } from './dto/update-filiais.dto'; 
-import { ApiTags, ApiOperation, ApiResponse, ApiBadRequestResponse, ApiBearerAuth } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse, ApiBadRequestResponse, ApiBearerAuth, ApiBody } from '@nestjs/swagger';
 import { RolesGuard } from '../common/guards/roles.guard';
 
 @ApiTags('FILIAIS')
@@ -29,8 +29,23 @@ export class FiliaisController {
   }
 
   @Put(':id')
-  async atualizar(@Param('id') id: string, @Body() dados: UpdateFilialDto) {
-    return await this.filiaisService.alterar(id, dados);
+  @ApiOperation({ summary: 'Atualizar filial (Requer Token)' })
+  @UseGuards(RolesGuard) // Garante que o perfil 'leitor' será barrado aqui
+  @ApiBody({
+    description: 'Campos para atualização da Filial (Envie apenas o que deseja alterar)',
+    schema: {
+      type: 'object',
+      example: {
+        nome: 'Hidropag - Filial Porto Alegre',
+        cidade: 'Porto Alegre'
+      }
+    }
+  })
+  async atualizar(
+    @Param('id') id: string, // CORRIGIDO: de number para string (UUID)
+    @Body() filial: any
+  ): Promise<void> {
+    await this.filiaisService.alterar(id, filial);
   }
 
   @Delete(':id')

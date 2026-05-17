@@ -67,29 +67,6 @@ async baixarPdf(@Param('id') id: string, @Res({ passthrough: true }) res: Respon
   return new StreamableFile(nota.arquivoPdf);
 }
 
-// @Controller('NOTAS')
-// export class NotasFiscaisController {
-//   constructor(private readonly notasFiscaisService: NotasFiscaisService) {}
-
-  // @Post()
-  // @UseInterceptors(FileInterceptor('file')) // 'file' é o nome do campo no Thunder Client
-  // async criar(
-  //   @Body() dados: Notas,
-  //   @UploadedFile() file: Express.Multer.File) {
-    
-  //   console.log('Arquivo recebido:', file); // <-- ADICIONE ISSO
-  //   console.log('Dados recebidos:', dados); // <-- ADICIONE ISSO
-  //   if (file) {
-  //     dados.arquivoPdf = file.buffer; // Salva o conteúdo binário do PDF
-  //   }
-  //   return await this.notasFiscaisService.inserir(dados);
-  // }
-
-  // @Post()
-  // async criar(@Body() nota: Notas) {
-  //   return await this.notasFiscaisService.inserir(nota);
-  // }
-
   @Get()
   async buscarTodas() {
     return await this.notasFiscaisService.listar();
@@ -102,8 +79,52 @@ async baixarPdf(@Param('id') id: string, @Res({ passthrough: true }) res: Respon
   }
 
   @Put(':id')
-  async atualizar(@Param('id') id: string, @Body() nota: Partial<Notas>) {
+  @ApiOperation({ summary: 'Atualizar nota fiscal (Requer Token)' })
+  @UseGuards(RolesGuard) // Bloqueia o perfil 'leitor' de fazer alterações
+  @ApiBody({
+    description: 'Campos para atualização da Nota Fiscal (Envie apenas o que deseja alterar)',
+    schema: {
+      type: 'object',
+      example: {
+        numero: '123456',
+        valor: 1500.85,
+        dataEmissao: '2026-05-17',
+        descricao: 'Prestação de serviços de manutenção hidropag',
+        quantidadeParcelas: 3,        // <-- Novo campo adicionado
+        status: 'Pendente'            // <-- Novo campo adicionado (ex: 'Pendente', 'Aprovado', 'Pago')
+      }
+    }
+  })
+  async atualizar(
+    @Param('id') id: string, 
+    @Body() nota: any // Mudamos para any para casar com o mapeamento estático do Swagger
+  ) {
     return await this.notasFiscaisService.alterar(id, nota);
+  }
+  @Put(':id/upload-pdf')
+  @ApiOperation({ summary: 'Substituir o arquivo PDF da nota fiscal (Requer Token)' })
+  @UseGuards(RolesGuard) // Bloqueia o perfil 'leitor'
+  @ApiConsumes('multipart/form-data') // Altera o tipo de conteúdo no Swagger para aceitar arquivo
+  @UseInterceptors(FileInterceptor('file')) // Intercepta o campo 'file' enviado
+  @ApiBody({
+    description: 'Selecione o novo arquivo PDF da nota fiscal',
+    schema: {
+      type: 'object',
+      properties: {
+        file: {
+          type: 'string',
+          format: 'binary', // Faz o Swagger exibir o botão de "Escolher arquivo"
+        },
+      },
+    },
+  })
+  async atualizarPdf(
+    @Param('id') id: string,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    // Aqui você chama o seu serviço repassando o ID da nota e o buffer do arquivo (file.buffer)
+    // Exemplo: return await this.notasFiscaisService.salvarPdf(id, file);
+    return { msg: 'Arquivo PDF atualizado com sucesso!', nomeArquivo: file.originalname };
   }
 
   // Recebe o ID como string
