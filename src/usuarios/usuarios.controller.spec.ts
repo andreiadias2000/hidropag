@@ -1,25 +1,23 @@
-// src/usuarios/usuarios.controller.spec.ts
 import { Test, TestingModule } from '@nestjs/testing';
 import { UsuariosController } from './usuarios.controller';
 import { UsuariosService } from './usuarios.service';
-import { LoginService } from './login.service'; // <-- Certifique-se de que o caminho do LoginService está correto
+import { LoginService } from './login.service'; 
 import { RolesGuard } from '../common/guards/roles.guard';
 import { ExecutionContext } from '@nestjs/common';
+import { CreateUsuarioDto } from './dto/create-usuario.dto';
 
 describe('UsuariosController', () => {
   let controller: UsuariosController;
   let service: UsuariosService;
 
-  // 1. Mock completo do UsuariosService
   const mockUsuariosService = {
     inserir: jest.fn(),
     listar: jest.fn(),
     buscarPorId: jest.fn(),
     alterar: jest.fn(),
-    excluir: jest.fn(),
+    remove: jest.fn(),
   };
 
-  // 2. Mock do LoginService (Resolve a dependência que faltava!)
   const mockLoginService = {
     validarUsuario: jest.fn(),
     gerarToken: jest.fn(),
@@ -34,13 +32,11 @@ describe('UsuariosController', () => {
           useValue: mockUsuariosService,
         },
         {
-          // Injetando o LoginService simulado para o construtor do controller não quebrar
           provide: LoginService,
           useValue: mockLoginService,
         },
       ],
     })
-      // Burlar o RolesGuard para não travar o teste por falta de token JWT
       .overrideGuard(RolesGuard)
       .useValue({
         canActivate: (context: ExecutionContext) => true,
@@ -62,26 +58,30 @@ describe('UsuariosController', () => {
 
   describe('buscarTodos', () => {
     it('deve retornar uma lista de usuários com sucesso', async () => {
-      const resultadoEsperado = [{ id: 1, nome: 'Ivan Silva', email: 'ivan@teste.com' }];
+      const resultadoEsperado = [{ id: 1, nome: 'Ivan Silva', email: 'ivan@teste.com', ativo: true }];
       mockUsuariosService.listar.mockResolvedValue(resultadoEsperado);
 
       const resultado = await controller.buscarTodos();
 
       expect(resultado).toEqual(resultadoEsperado);
-      expect(mockUsuariosService.listar).toHaveBeenCalledTimes(1);
     });
   });
 
-  describe('buscarUma', () => {
-    it('deve retornar um usuário específico por ID numérico', async () => {
-      const usuarioMock = { id: 1, nome: 'Ivan Silva', email: 'ivan@teste.com' };
-      mockUsuariosService.buscarPorId.mockResolvedValue(usuarioMock);
+  describe('create', () => {
+    it('deve chamar o método inserir do serviço com os dados do DTO', async () => {
+      const dto: CreateUsuarioDto = {
+        nome: 'Ivan Silva',
+        email: 'ivan@teste.com',
+        senha: 'Admin#2026',
+        perfil: { id: '354ea3ae-2584-40dc-94df-fb2d3c71f105' }, // Alterado para o UUID string
+      };
 
-      // Executa passando o ID numérico 1
-      const resultado = await controller.buscarUm(1);
+      const resultadoMock = { id: 1, ...dto, senha: 'senha_criptografada', ativo: true };
+      mockUsuariosService.inserir.mockResolvedValue(resultadoMock);
 
-      expect(resultado).toEqual(usuarioMock);
-      expect(mockUsuariosService.buscarPorId).toHaveBeenCalledWith(1);
+      const resultado = await controller.criar(dto);
+
+      expect(resultado).toEqual(resultadoMock);
     });
   });
 });

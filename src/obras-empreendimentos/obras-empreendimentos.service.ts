@@ -20,16 +20,14 @@ export class ObrasEmpreendimentosService {
   ) {}
 
   async inserir(dados: CreateObrasEmpreendimentoDto): Promise<Obras> {
-    // 1. VALIDAÇÃO DE FILIAL: Verifica se a filial informada realmente existe la no banco
     const filialExiste = await this.filiaisRepository.findOne({
-      where: { id: dados.filial.id },
+      where: { id: dados.filialId },
     });
 
     if (!filialExiste) {
-      throw new NotFoundException(`A filial informada (ID: ${dados.filial.id}) não existe no sistema.`);
+      throw new NotFoundException(`A filial informada (ID: ${dados.filialId}) não existe no sistema.`);
     }
 
-    // 2. VALIDAÇÃO DE DUPLICIDADE: Verifica se o nome da obra já está em uso
     const obraExiste = await this.repository.findOne({
       where: { nome_obra: dados.nome_obra },
     });
@@ -38,14 +36,14 @@ export class ObrasEmpreendimentosService {
       throw new BadRequestException(`A obra "${dados.nome_obra}" já está cadastrada.`);
     }
 
-    // 3. SALVA NO BANCO: Como a filial existe e o nome é novo, cria e salva a obra
     const novaObra = this.repository.create({
       nome_obra: dados.nome_obra,
-      filial: filialExiste, // a entidade da filial encontrada foi para o TypeORM fazer o vínculo
+      ativo: dados.ativo,
+      filial: filialExiste,
     });
 
     return await this.repository.save(novaObra);
-  }
+}
 
   async listar(): Promise<Obras[]> {
     return await this.repository.find({

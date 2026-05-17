@@ -1,35 +1,33 @@
-// src/usuarios/usuarios.service.spec.ts
 import { Test, TestingModule } from '@nestjs/testing';
 import { UsuariosService } from './usuarios.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Usuarios } from './entities/usuario.entity';
-import { Perfil } from '../perfil/entities/perfil.entity'; // <-- Certifique-se de que o caminho do Perfil está correto
+import { Perfil } from '../perfil/entities/perfil.entity'; 
 import { HashService } from '../common/middlewares/hash.service';
 import { Repository } from 'typeorm';
+import { CreateUsuarioDto } from './dto/create-usuario.dto';
+import { BadRequestException, NotFoundException } from '@nestjs/common';
 
 describe('UsuariosService', () => {
   let service: UsuariosService;
   let usuariosRepository: Repository<Usuarios>;
   let perfilRepository: Repository<Perfil>;
 
-  // 1. Mock do Repositório de Usuários
   const mockUsuariosRepository = {
     find: jest.fn(),
-    findOneBy: jest.fn(),
+    findOne: jest.fn(),
     save: jest.fn(),
     create: jest.fn(),
+    update: jest.fn(),
   };
 
-  // 2. Mock do Repositório de Perfil (O QUE ESTAVA FALTANDO!)
   const mockPerfilRepository = {
     find: jest.fn(),
     findOneBy: jest.fn(),
   };
 
-  // 3. Mock do HashService
   const mockHashService = {
-    hash: jest.fn().mockResolvedValue('senha_criptografada'),
-    comparar: jest.fn().mockResolvedValue(true),
+    gerarHash: jest.fn().mockResolvedValue('senha_criptografada'),
   };
 
   beforeEach(async () => {
@@ -41,7 +39,6 @@ describe('UsuariosService', () => {
           useValue: mockUsuariosRepository,
         },
         {
-          // Injetando o PerfilRepository simulado para resolver a dependência do Nest
           provide: getRepositoryToken(Perfil),
           useValue: mockPerfilRepository,
         },
@@ -69,15 +66,56 @@ describe('UsuariosService', () => {
 
   describe('listar', () => {
     it('deve retornar uma lista de usuários com sucesso', async () => {
-      const resultadoEsperado = [{ id: '1', nome: 'Ivan Silva', email: 'ivan@teste.com' }];
-      
-      // Força o método find simulado a retornar nossos dados de teste
+      const resultadoEsperado = [{ id: 1, nome: 'Ivan Silva', email: 'ivan@teste.com', ativo: true }];
       mockUsuariosRepository.find.mockResolvedValue(resultadoEsperado);
 
       const resultado = await service.listar();
 
       expect(resultado).toEqual(resultadoEsperado);
       expect(mockUsuariosRepository.find).toHaveBeenCalled();
+    });
+  });
+
+  describe('inserir', () => {
+    it('deve cadastrar um novo usuário com sucesso', async () => {
+      const dto: CreateUsuarioDto = {
+        nome: 'Ivan Silva',
+        email: 'ivan@teste.com',
+        senha: 'Admin#2026',
+        perfil: { id: '354ea3ae-2584-40dc-94df-fb2d3c71f105' }, // Alterado para o UUID string
+      };
+
+      const usuarioSalvo = { 
+        id: 1, 
+        nome: dto.nome, 
+        email: dto.email, 
+        senha: 'senha_criptografada', 
+        ativo: true,
+        perfil: { id: '354ea3ae-2584-40dc-94df-fb2d3c71f105' } // Alterado para o UUID string
+      };
+
+      mockUsuariosRepository.findOne.mockResolvedValue(null);
+      mockHashService.gerarHash.mockResolvedValue('senha_criptografada');
+      mockUsuariosRepository.create.mockReturnValue(usuarioSalvo);
+      mockUsuariosRepository.save.mockResolvedValue(usuarioSalvo);
+
+      const resultado = await service.inserir(dto);
+
+      expect(resultado).toEqual(usuarioSalvo);
+      expect(mockUsuariosRepository.findOne).toHaveBeenCalledWith({ where: { email: dto.email } });
+    });
+
+    it('deve lançar BadRequestException se o e-mail já estiver cadastrado', async () => {
+      const dto: CreateUsuarioDto = {
+        nome: 'Ivan Silva',
+        email: 'ivan@teste.com',
+        senha: 'Admin#2026',
+        perfil: { id: '354ea3ae-2584-40dc-94df-fb2d3c71f105' }, // Alterado para o UUID string
+      };
+
+      mockUsuariosRepository.findOne.mockResolvedValue({ id: 1, email: 'ivan@teste.com' });
+
+      await expect(service.inserir(dto)).rejects.toThrow(BadRequestException);
     });
   });
 });

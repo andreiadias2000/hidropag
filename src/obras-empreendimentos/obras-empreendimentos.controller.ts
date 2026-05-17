@@ -1,9 +1,12 @@
 import { Controller, Get, Post, Body, Param, Delete, Put, ParseUUIDPipe, UseGuards } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth, ApiBody } from '@nestjs/swagger';
-import { ObrasEmpreendimentosService } from './obras-empreendimentos.service';
+import { ObrasEmpreendimentosService } from './obras-empreendimentos.service'; 
 import { CreateObrasEmpreendimentoDto } from './dto/create-obras-empreendimento.dto';
 import { UpdateObrasEmpreendimentoDto } from './dto/update-obras-empreendimento.dto';
 import { RolesGuard } from '../common/guards/roles.guard';
+import { Obras } from './entities/obras-empreendimento.entity';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @ApiTags('OBRAS')
 @ApiBearerAuth('token-acesso')
@@ -11,23 +14,28 @@ import { RolesGuard } from '../common/guards/roles.guard';
 @UseGuards(RolesGuard) // <--- ISSO PROTEGE O CONTROLLER INTEIRO!
 export class ObrasEmpreendimentosController {
   // Mantido exatamente como o que o ivan fez: 'service'
-  constructor(private readonly service: ObrasEmpreendimentosService) {}
-
+  constructor(
+    private readonly obrasEmpreendimentosService: ObrasEmpreendimentosService,
+    
+    // SE ADICIONAR ISSO AQUI, O ERRO SOME:
+    @InjectRepository(Obras)
+    private readonly repository: Repository<Obras>,
+  ) {}
   @Post()
   @ApiOperation({ summary: 'Cadastrar nova obra' })
   // O @ApiBody manual sumiu porque o CreateObrasEmpreendimentoDto já desenha o JSON no Swagger
   async criar(@Body() obra: CreateObrasEmpreendimentoDto) { 
-    return await this.service.inserir(obra);
+    return await this.obrasEmpreendimentosService.inserir(obra);
   }
 
   @Get()
   async buscarTodas() {
-    return await this.service.listar();
+    return await this.obrasEmpreendimentosService.listar();
   }
 
   @Get(':id')
   async buscarUma(@Param('id', ParseUUIDPipe) id: string) {
-    return await this.service.buscarPorId(id);
+    return await this.obrasEmpreendimentosService.buscarPorId(id);
   }
 
   @Put(':id')
@@ -50,12 +58,15 @@ export class ObrasEmpreendimentosController {
     @Body() dados: any 
   ) {
     // CORREÇÃO: Usando 'this.service' que é o nome real injetado no seu construtor
-    return await this.service.alterar(id, dados);
+    return await this.obrasEmpreendimentosService.alterar(id, dados);
   }
 
+  
   @Delete(':id')
-  async remover(@Param('id', ParseUUIDPipe) id: string) {
-    return await this.service.excluir(id);
+  async remove(@Param('id') id: string) {
+    // Agora o "this.repository" passa a existir aqui dentro
+    await this.repository.update(id, { ativo: false });
+    return { message: 'Obra desativada com sucesso' };
   }
 }
 

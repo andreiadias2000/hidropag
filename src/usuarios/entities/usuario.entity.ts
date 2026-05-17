@@ -10,17 +10,19 @@ export class Usuarios{
     @PrimaryGeneratedColumn()
     id?: number;
 
-    @Column()
-    
+    @Column()    
     nome?: string 
 
-    @Column({ unique: true })// emial vai ser unico 
-    
+    @Column({ unique: true })// emial vai ser unico     
     email?: string;
 
-    @Column({ name: 'senha', nullable: false })
-    
+    @Column({ name: 'senha', nullable: false })    
     senha?: string;
+
+    // NOVO CAMPO DE CONTROLE
+    @Column({ default: true })
+    @ApiProperty({ example: true, description: 'Indica se o usuário está ativo no sistema' })
+    ativo!: boolean;
     
     // Mudança aqui: Relacionamento com a nova tabela
     @ManyToOne(() => Perfil, (perfil) => perfil.usuarios)

@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { Usuarios } from './entities/usuario.entity';
 import { Perfil } from '../perfil/entities/perfil.entity'; // Certifique-se de criar este caminho
 import { HashService } from '../common/middlewares/hash.service';
+import { CreateUsuarioDto } from './dto/create-usuario.dto';
 
 @Injectable()
 export class UsuariosService implements OnModuleInit {
@@ -65,23 +66,34 @@ export class UsuariosService implements OnModuleInit {
   
 
 
-  async inserir(usuario: Usuarios): Promise<Usuarios> {
-    if (!usuario || !usuario.email || !usuario.senha) {
+  async inserir(dados: CreateUsuarioDto): Promise<Usuarios> {
+    if (!dados.email || !dados.senha) {
       throw new BadRequestException("Falta dados obrigatórios");
     }
 
     const usuarioExistente = await this.repository.findOne({
-      where: { email: usuario.email }
+      where: { email: dados.email }
     });
 
     if (usuarioExistente) {
       throw new BadRequestException("Este e-mail já está cadastrado no sistema.");
     }
 
-    // Criptografia da senha antes de salvar
-    usuario.senha = await this.hashService.gerarHash(usuario.senha);
+    const senhaCriptografada = await this.hashService.gerarHash(dados.senha);
 
-    return await this.repository.save(usuario);
+    const novoUsuarioData: Partial<Usuarios> = {
+      nome: dados.nome,
+      email: dados.email,
+      senha: senhaCriptografada,
+      ativo: dados.ativo ?? true,
+      // REMOVIDO O NUMBER(): Agora passa a string/UUID diretamente
+      perfil: dados.perfil ? ({ id: dados.perfil.id } as any) : undefined,
+      filial: dados.filial ? ({ id: dados.filial.id } as any) : undefined,
+    };
+
+    const novoUsuario = this.repository.create(novoUsuarioData);
+
+    return await this.repository.save(novoUsuario);
   }
 
   async listar(): Promise<Usuarios[]> {
@@ -117,10 +129,12 @@ export class UsuariosService implements OnModuleInit {
     }
   }
 
-  async excluir(id: number): Promise<void> {
-    const usuarioExiste = await this.buscarPorId(id);
-    if (usuarioExiste) {
-      await this.repository.delete(id);
-    }
+  async remove(id: number): Promise<void> {
+  const usuario = await this.repository.findOne({ where: { id } });
+  if (!usuario) {
+    throw new NotFoundException(`Usuário com ID ${id} não encontrado.`);
   }
+
+  await this.repository.update(id, { ativo: false });
+}
 }

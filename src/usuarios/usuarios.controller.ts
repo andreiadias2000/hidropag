@@ -79,7 +79,7 @@ export class UsuariosController {
     schema: {
       type: 'object',
       example: {
-        nome: 'Ivan Silva',
+        nome: 'Ivan Silva',// depois adicionar a variavel do .env
         email: 'ivan@teste.com',
         senha: 'Admin#2026',
         perfil: {
@@ -94,7 +94,7 @@ export class UsuariosController {
 
   @Delete(':id')
   @ApiOperation({ summary: 'Excluir usuário (Requer Token)' })
-  async deletar(@Param('id') id: number): Promise<void>{
-    return await this.usuariosService.excluir(id);
+  async deletar(@Param('id') id: string): Promise<void> {
+    return await this.usuariosService.remove(Number(id));
   }
 }

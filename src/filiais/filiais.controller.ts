@@ -30,17 +30,30 @@ export class FiliaisController {
 
   @Put(':id')
   @ApiOperation({ summary: 'Atualizar filial (Requer Token)' })
-  @UseGuards(RolesGuard) // Garante que o perfil 'leitor' será barrado aqui
+  @UseGuards(RolesGuard)
   @ApiBody({
     description: 'Campos para atualização da Filial (Envie apenas o que deseja alterar)',
     schema: {
       type: 'object',
       example: {
         nome: 'Hidropag - Filial Porto Alegre',
-        cidade: 'Porto Alegre'
+        cnpj: '12345678000199',
+        ativo: true,
+        cidade: 'Porto Alegre',
+        uf: 'RS',
+        cep: '90000000',
+        logradouro: 'Av. Ipiranga',
+        numero: '1234',
+        email_contato: 'portoalegre@hidropag.com'
       }
     }
   })
+  async update(
+    @Param('id') id: string, 
+    @Body() updateFilialDto: UpdateFilialDto
+  ) {
+    return await this.filiaisService.alterar(id, updateFilialDto);
+  }
   async atualizar(
     @Param('id') id: string, // CORRIGIDO: de number para string (UUID)
     @Body() filial: any

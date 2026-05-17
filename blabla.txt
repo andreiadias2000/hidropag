@@ -37,3 +37,5 @@ para validaçoes
 npm install class-validator class-transformer
 
 add teste unitario, no usuario.espec e usuarios.e2e-spec pasta ts.
+npm run test -- usuarios
+npm run test:e2e -- usuarios

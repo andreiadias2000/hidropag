@@ -1,5 +1,5 @@
 // src/usuarios/dto/create-usuario.dto.ts
-import { IsEmail, IsNotEmpty, IsString, MinLength, IsObject, IsOptional } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsString, MinLength, IsObject, IsOptional, IsBoolean } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateUsuarioDto {
@@ -18,6 +18,11 @@ export class CreateUsuarioDto {
   @IsNotEmpty({ message: 'A palavra-passe é obrigatória.' })
   @MinLength(6, { message: 'A palavra-passe deve ter pelo menos 6 caracteres.' })
   senha?: string;
+
+  @ApiProperty({ example: true, description: 'Define se o usuário entra no sistema como ativo', default: true, required: false })
+  @IsBoolean({ message: 'O campo ativo deve ser um valor booleano.' })
+  @IsOptional()
+  ativo?: boolean;
 
   @ApiProperty({
     example: { id: '6fc13eec-a3fe-4fe4-811b-2563cb1b5f4c' },

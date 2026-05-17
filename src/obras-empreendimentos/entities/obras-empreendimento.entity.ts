@@ -17,6 +17,11 @@ export class Obras {
   @ApiProperty({ example: 'Hospital Moinhos de Vento', description: 'Nome único da Obra' })
   nome_obra!: string; // Removi o '?' pois agora é obrigatório
 
+  // NOVO CAMPO DE CONTROLE
+  @Column({ default: true })
+  @ApiProperty({ example: true, description: 'Indica se a obra está ativa ou já foi concluída/arquivada' })
+  ativo!: boolean;
+  
   // pra garantir que a obra sempre tenha uma filial vinculada 
   @ManyToOne(() => Filiais, (filial) => filial.obras, { nullable: false })
   @JoinColumn({ name: 'filialId' }) // Define o nome da coluna de união no banco
