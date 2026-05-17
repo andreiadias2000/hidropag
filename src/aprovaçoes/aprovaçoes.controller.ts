@@ -1,9 +1,13 @@
 import { Controller, Get, Post, Body, Param, Delete } from '@nestjs/common';
 import { AprovaçoesService } from './aprovaçoes.service';
 import { APROVACOES } from './entities/aprovaçoe.entity';
-import { ApiBody } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
 
+
+
+@ApiTags('APROVACOES')
 @Controller('APROVACOES') // Rota: http://localhost:3000/APROVACOES
+@ApiBearerAuth('token-acesso')
 export class AprovaçoesController {
   
   constructor(private readonly aprovaçoesService: AprovaçoesService) {}

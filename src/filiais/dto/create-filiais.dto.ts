@@ -7,7 +7,7 @@ import { ApiProperty } from '@nestjs/swagger';
 export class CreateFilialDto {
   @ApiProperty({ example: 'Filial Porto Alegre' })
   @IsString({ message: 'O nome deve ser um texto' })
-  @IsNotEmpty({ message: 'O campo nome é obrigatório' })
+  @IsNotEmpty({ message: 'O nome da filial é obrigatório' })
   nome!: string;
 
   @ApiProperty({ example: 'Porto Alegre' })

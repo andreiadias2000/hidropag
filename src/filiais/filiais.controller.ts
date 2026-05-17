@@ -3,19 +3,17 @@ import { FiliaisService } from './filiais.service';
 
 import { CreateFilialDto } from './dto/create-filiais.dto'; 
 import { UpdateFilialDto } from './dto/update-filiais.dto'; 
-import { ApiTags, ApiOperation, ApiResponse, ApiBadRequestResponse } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse, ApiBadRequestResponse, ApiBearerAuth } from '@nestjs/swagger';
 
 @ApiTags('FILIAIS')
+@ApiBearerAuth('token-acesso')
 @Controller('FILIAIS')
 export class FiliaisController {
   constructor(private readonly filiaisService: FiliaisService) {}
 
   @Post()
-  @ApiOperation({ summary: 'Cadastra uma nova filial' })
-  @ApiResponse({ status: 201, description: 'Filial criada com sucesso!' })
-  @ApiBadRequestResponse({ description: 'Erro de validação (Campos obrigatórios ou Nome duplicado)' })
-  async criar(@Body() dados: CreateFilialDto) {
-    return await this.filiaisService.inserir(dados);
+  async criar(@Body() dados: CreateFilialDto) { // <-- Alterado para o DTO de criação
+    return await this.filiaisService.inserir(dados as any);
   }
 
   @Get()

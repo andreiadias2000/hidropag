@@ -12,6 +12,12 @@ import { ObrasEmpreendimentosModule } from './obras-empreendimentos/obras-empree
 import { LoginService } from './usuarios/login.service';
 import { TokenMiddleware } from './common/middlewares/token.middleware';
 import { PerfisModule } from './perfil/entities/perfil.module'; // Verifique se o caminho é este
+import { UsuariosController } from './usuarios/usuarios.controller';
+import { NotasFiscaisController } from './notas-fiscais/notas-fiscais.controller';
+import { ObrasEmpreendimentosController } from './obras-empreendimentos/obras-empreendimentos.controller';
+import { FiliaisController } from './filiais/filiais.controller';
+import { AprovaçoesController } from './aprovaçoes/aprovaçoes.controller';
+import { PerfisController } from './perfil/entities/perfil.controller';
 
 @Module({
   imports: [
@@ -34,12 +40,15 @@ export class AppModule implements NestModule {
       .apply(tokenMiddleware.verificarAcesso)
       .exclude(
         { path: 'usuarios/login', method: RequestMethod.POST },
-        { path: 'usuarios', method: RequestMethod.POST }
+       
       )
       .forRoutes(
-        'usuarios',
-        'NOTAS', 
-        'OBRAS'  
+        UsuariosController,
+        NotasFiscaisController,
+        ObrasEmpreendimentosController,
+        FiliaisController,
+        PerfisController,
+        AprovaçoesController  
       );
   }
 }

@@ -3,10 +3,11 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, Upl
 import { NotasFiscaisService } from './notas-fiscais.service';
 import { Notas } from './entities/notas-fiscais.entity';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ApiBody, ApiConsumes, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiConsumes, ApiOperation, ApiTags } from '@nestjs/swagger';
 import type { Response } from 'express';
 
 @ApiTags('NOTAS') // Organiza no Swagger
+@ApiBearerAuth('token-acesso')
 @Controller('NOTAS')
 export class NotasFiscaisController {
   
